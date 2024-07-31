@@ -22,10 +22,12 @@ const printMemory = () => {
     log(`Memory usage: ${memory} -- Processed: ${processed}`);
 }
 
+const client = Deno.createHttpClient({poolMaxIdlePerHost: 0});
+
 const makeRequest = async url => {
     const signal = AbortSignal.timeout(5000);
     try {
-        const response = await fetch(url, { signal });
+        const response = await fetch(url, { signal, client });
         await response.text();
         results[`${response.status.toString()[0]}XX`] += 1;
     } catch (error) {
